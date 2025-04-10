@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BeeFit Macro Calculator</title>
     <link rel="stylesheet" href="style.css" />
 </head>
@@ -11,38 +11,43 @@
         <img src="logo.jpeg" alt="BeeFit Logo" class="logo" />
         <h1>Macro Calculator</h1>
         <form id="calculator-form">
-            <label>Age</label>
-            <input type="number" id="age" name="age" />
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" required />
 
-            <label>Gender</label>
-            <select id="gender">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
             </select>
 
-            <label>Weight (kg)</label>
-            <input type="number" id="weight" name="weight" />
+            <label for="weight">Weight (kg)</label>
+            <input type="number" id="weight" name="weight" required />
 
-            <label>Height (cm)</label>
-            <input type="number" id="height" name="height" />
+            <label for="height">Height (cm)</label>
+            <input type="number" id="height" name="height" required />
 
-            <label>Activity Level</label>
-            <select id="activity">
+            <label for="activity">Activity Level</label>
+            <select id="activity" name="activity" required>
                 <option value="sedentary">Sedentary</option>
                 <option value="light">Lightly active</option>
                 <option value="moderate">Moderately active</option>
                 <option value="active">Very active</option>
             </select>
 
-            <label>Goal</label>
-            <select id="goal">
-                <option value="maintain">Maintain</option>
-                <option value="cut">Cut</option>
-                <option value="bulk">Bulk</option>
+            <label for="goal">Goal</label>
+            <select id="goal" name="goal" required>
+                <option value="maintain">Maintain Weight</option>
+                <option value="cut">Cut Weight</option>
+                <option value="bulk">Bulk Weight</option>
             </select>
 
             <button type="button" id="calculate-btn">Calculate</button>
         </form>
+
+        <div id="result">
+            <h3>Results:</h3>
+            <p id="result-text"></p>
+        </div>
     </div>
 
     <script>
@@ -56,14 +61,15 @@
             const activityLevel = document.getElementById("activity").value;
             const goal = document.getElementById("goal").value;
 
-            // Simple output for demonstration purposes
-            let result = `Age: ${age}, Weight: ${weight}, Height: ${height}, Gender: ${gender}, Activity: ${activityLevel}, Goal: ${goal}`;
+            // Calculate basic output (for demo purposes: BMI example)
+            let result = `Age: ${age}, Weight: ${weight} kg, Height: ${height} cm, Gender: ${gender}, Activity: ${activityLevel}, Goal: ${goal}`;
 
-            // Alert or display the result (you can display it inside an element instead)
-            alert(result);
+            // Display the result in the result div
+            document.getElementById("result-text").innerText = result;
+            document.getElementById("result").style.display = "block";
         }
 
-        // Attaching event listener to the button
+        // Attach the calculate function to the button
         document.getElementById("calculate-btn").addEventListener("click", calculate);
     </script>
 </body>
