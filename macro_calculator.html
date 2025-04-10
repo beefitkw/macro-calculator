@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Macro Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #EAE0D5;
+      color: #0A0908;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #22333B;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .toggle-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+    button {
+      background-color: #C6AC8E;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      margin-top: 20px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .results {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #F5F5F5;
+      border-radius: 8px;
+    }
+    .lang-switch {
+      float: right;
+      margin-top: -50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="calculator">
+    <h1 id="title">Macro Calculator</h1>
+    <div class="lang-switch">
+      <select id="lang" onchange="setLanguage()">
+        <option value="en">EN</option>
+        <option value="ar">AR</option>
+      </select>
+    </div>
+    <label id="ageLabel">Age</label>
+    <input type="number" id="age">
+    
+    <label id="genderLabel">Gender</label>
+    <select id="gender">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+
+    <div class="toggle-group">
+      <label>
+        <input type="radio" name="unit" value="metric" checked onchange="updatePlaceholders()"> Metric
+      </label>
+      <label>
+        <input type="radio" name="unit" value="imperial" onchange="updatePlaceholders()"> Imperial
+      </label>
+    </div>
+
+    <label id="weightLabel">Weight (kg)</label>
+    <input type="number" id="weight">
+
+    <label id="heightLabel">Height (cm)</label>
+    <input type="number" id="height">
+
+    <label id="activityLabel">Activity Level</label>
+    <select id="activity">
+      <option value="1.2">Sedentary</option>
+      <option value="1.375">Lightly Active</option>
+      <option value="1.55">Moderately Active</option>
+      <option value="1.725">Very Active</option>
+      <option value="1.9">Extremely Active</option>
+    </select>
+
+    <label id="goalLabel">Goal</label>
+    <select id="goal">
+      <option value="maintain">Maintain</option>
+      <option value="cut">Cut</option>
+      <option value="bulk">Bulk</option>
+    </select>
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="results" id="results" style="display:none;">
+      <p id="caloriesOutput"></p>
+      <p id="proteinOutput"></p>
+      <p id="fatOutput"></p>
+      <p id="carbOutput"></p>
+    </div>
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        title: "Macro Calculator",
+        ageLabel: "Age",
+        genderLabel: "Gender",
+        weightLabel: "Weight (kg)",
+        heightLabel: "Height (cm)",
+        activityLabel: "Activity Level",
+        goalLabel: "Goal",
+        maintain: "Maintain",
+        cut: "Cut",
+        bulk: "Bulk",
+        male: "Male",
+        female: "Female"
+      },
+      ar: {
+        title: "حاسبة الماكروز",
+        ageLabel: "العمر",
+        genderLabel: "الجنس",
+        weightLabel: "الوزن (كجم)",
+        heightLabel: "الطول (سم)",
+        activityLabel: "مستوى النشاط",
+        goalLabel: "الهدف",
+        maintain: "الثبات",
+        cut: "تنشيف",
+        bulk: "زيادة",
+        male: "ذكر",
+        female: "أنثى"
+      }
+    };
+
+    function setLanguage() {
+      const lang = document.getElementById("lang").value;
+      const t = translations[lang];
+      document.getElementById("title").innerText = t.title;
+      document.getElementById("ageLabel").innerText = t.ageLabel;
+      document.getElementById("genderLabel").innerText = t.genderLabel;
+      document.getElementById("weightLabel").innerText = t.weightLabel;
+      document.getElementById("heightLabel").innerText = t.heightLabel;
+      document.getElementById("activityLabel").innerText = t.activityLabel;
+      document.getElementById("goalLabel").innerText = t.goalLabel;
+    }
+
+    function updatePlaceholders() {
+      const metric = document.querySelector('input[name="unit"]:checked').value === 'metric';
+      document.getElementById("weightLabel").innerText = metric ? "Weight (kg)" : "Weight (lb)";
+      document.getElementById("heightLabel").innerText = metric ? "Height (cm)" : "Height (in)";
+    }
+
+    function calculate() {
+      const gender = document.getElementById("gender").value;
+      const age = parseInt(document.getElementById("age").value);
+      const weight = parseFloat(document.getElementById("weight").value);
+      const height = parseFloat(document.getElementById("height").value);
+      const activity = parseFloat(document.getElementById("activity").value);
+      const goal = document.getElementById("goal").value;
+      const metric = document.querySelector('input[name="unit"]:checked').value === 'metric';
+
+      const w = metric ? weight : weight * 0.4536;
+      const h = metric ? height : height * 2.54;
+
+      let bmr = gender === 'male'
+        ? 10 * w + 6.25 * h - 5 * age + 5
+        : 10 * w + 6.25 * h - 5 * age - 161;
+
+      let tdee = bmr * activity;
+      if (goal === "cut") tdee -= 500;
+      if (goal === "bulk") tdee += 500;
+
+      const protein = w * 2.2;
+      const fat = w * 0.9;
+      const carbs = (tdee - (protein * 4 + fat * 9)) / 4;
+
+      document.getElementById("caloriesOutput").innerText = `Calories: ${Math.round(tdee)}`;
+      document.getElementById("proteinOutput").innerText = `Protein: ${Math.round(protein)}g`;
+      document.getElementById("fatOutput").innerText = `Fat: ${Math.round(fat)}g`;
+      document.getElementById("carbOutput").innerText = `Carbs: ${Math.round(carbs)}g`;
+      document.getElementById("results").style.display = "block";
+    }
+
+    setLanguage();
+  </script>
+</body>
+</html>
