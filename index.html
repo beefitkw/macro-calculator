@@ -206,3 +206,20 @@
   </script>
 </body>
 </html>
+<script>
+  function calculate() {
+    // Get values from the form
+    const age = document.getElementById('age').value;
+    const weight = document.getElementById('weight').value;
+    const height = document.getElementById('height').value;
+
+    // Perform basic calculations (just an example)
+    const result = (weight / (height * height)) * 10000;
+
+    // Display the result in an alert (you can change this to showing in a div)
+    alert(`Your BMI: ${result.toFixed(2)}`);
+  }
+
+  // Attach calculate function to the button
+  document.querySelector('button').addEventListener('click', calculate);
+</script>
